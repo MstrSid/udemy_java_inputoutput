@@ -1,9 +1,9 @@
 package org.example;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.InputStream;
 
 public class Main {
 
@@ -12,26 +12,23 @@ public class Main {
     File directory = new File(path);
     File file = new File(path + "/names.txt");
 
-    try {
-      if (!directory.exists()) {
-        directory.mkdirs();
-      }
-      if (!file.exists()) {
-        file.createNewFile();
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+//    try(OutputStream outputStream = new FileOutputStream(file, true)) {
+//      String names = "Mike Ann Bob Kyle Leo Sonya Alex Adam\n";
+//      outputStream.write(names.getBytes());
+//    } catch (Exception e){
+//      e.printStackTrace();
+//    }
 
-    try (Reader reader = new InputStreamReader(new FileInputStream(file))) {
-      char[] array = new char[1024];
-      int count = reader.read(array);
+    try (InputStream in = new BufferedInputStream(new FileInputStream(file))) {
+      long before = System.currentTimeMillis();
+      int a = in.read();
       StringBuilder res = new StringBuilder();
-      while (count > 0) {
-        res.append(new String(array, 0, count));
-        count = reader.read(array);
+      while (a != -1) {
+        res.append((char) a);
+        a = in.read();
       }
-      System.out.println(res);
+      long after = System.currentTimeMillis();
+      System.out.println(after - before);
     } catch (Exception e) {
       e.printStackTrace();
     }
